@@ -1,6 +1,5 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,2,5,30&height=220&section=header&text=NeonCharts&fontSize=90&fontColor=ffffff&fontAlignY=36&desc=Advanced%20Financial%20Analytics%20%26%20Trading%20Ecosystem&descAlignY=62&descSize=20&animation=twinkling" width="100%"/>
 
 <br/>
 
@@ -181,22 +180,7 @@ graph TD
 
 ## 🔐 Security Architecture
 
-```
-┌──────────────────────── THREAT MATRIX ─────────────────────────────┐
-│  Attack Vector           Status   Mitigation                        │
-│  ──────────────────────  ──────   ──────────────────────────────── │
-│  XSS token theft         ✅ PASS  HttpOnly cookies — JS blind       │
-│  CSRF attacks            ✅ PASS  SameSite=Strict cookie            │
-│  SQL injection           ✅ PASS  Parameterized queries only        │
-│  Privilege escalation    ✅ PASS  RBAC middleware per route         │
-│  Secret exposure         ✅ PASS  .env blocked in .gitignore        │
-│  Token replay            ✅ PASS  JWT exp + iat enforced            │
-│  Brute force / spray     ✅ PASS  OAuth — no password surface       │
-│  Auth rate limiting      ⚠️ WARN  Add express-rate-limit            │
-│  HTTP security headers   ⚠️ WARN  Add helmet.js middleware          │
-│  Dependency CVEs         ⚠️ WARN  Enable GitHub Dependabot          │
-└────────────────────────────────────────────────────────────────────┘
-```
+
 
 **Authentication flow:**
 
