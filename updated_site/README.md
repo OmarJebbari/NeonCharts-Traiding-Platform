@@ -1,177 +1,88 @@
-TradingView-style Website (Frontend + Backend + MySQL + Login)
+NeonCharts (updated_site)
 
-This package contains:
+Production-focused full-stack architecture:
 
-React/Vite frontend (port 3000)
+- Frontend: React + Vite + TypeScript
+- Backend: Express API in `server/src/index.js`
+- Database: Postgres / Neon via `DATABASE_URL`
+- Auth: Email/password + Google OAuth
+- Session: JWT in HttpOnly cookie (`tv_token`)
+- AI: Gemini proxied by backend (`/api/ai/*`) so no API key in browser bundle
 
-Node/Express backend (port 5000)
+Essential structure:
 
-MySQL database + phpMyAdmin via Docker
+updated_site/
+- App.tsx
+- index.tsx
+- components/
+- contexts/
+- services/
+  - csrf.ts
+  - geminiService.ts
+- server/
+  - src/index.js
+  - db/schema.sql
+  - db/seed.sql
 
-The Products (Calendar) page loads data from MySQL.
-SymbolDetailView is private (Premium-only):
+Environment setup:
 
-If you are not logged in → you are redirected to the Login modal
+1) Frontend
+- Copy `.env.example` to `.env.local`
+- Set `VITE_GOOGLE_CLIENT_ID`
 
-After login → you go to Home
+2) Backend
+- Copy `server/.env.example` to `server/.env`
+- Set at minimum:
+  - `DATABASE_URL`
+  - `JWT_SECRET`
+  - `CORS_ORIGIN=http://localhost:3000`
+- Optional AI:
+  - `GEMINI_API_KEY`
+  - `GEMINI_MODEL=gemini-2.5-flash`
 
-After logout → you go to Home
+Run locally:
 
-What was implemented
-1) Real authentication (backend)
+1) Install once
 
-Backend endpoints:
-
-POST /api/auth/register (Email/Password)
-
-POST /api/auth/login (Email/Password)
-
-POST /api/auth/google (Google ID token verification)
-
-GET /api/auth/me (session restore)
-
-POST /api/auth/logout
-
-Auth is stored in a HttpOnly cookie (works on localhost).
-
-2) Premium gating (SymbolDetailView)
-
-Only users with plan = 'premium' in MySQL can open SymbolDetailView.
-
-Free users are redirected to Home with a message.
-
-3) Database
-
-Tables:
-
-calendar_events (your calendar data)
-
-users (accounts + plan free/premium)
-
-1) Start the database (Docker)
-
-In the project root:
-
-docker compose up -d
-
-
-phpMyAdmin:
-
-http://localhost:8081
-
-Server: mysql
-
-User: root
-
-Password: root
-
-On first run, Docker automatically executes:
-
-server/db/schema.sql
-
-server/db/seed.sql
-
-2) Configure Google Sign-In (OAuth)
-Frontend (.env.local)
-
-Set:
-
-VITE_GOOGLE_CLIENT_ID=...
-
-Backend (server/.env)
-
-Set:
-
-GOOGLE_CLIENT_ID=...
-
-JWT_SECRET=... (anything)
-
-Notes:
-
-In Google Cloud Console (OAuth Client ID), keep:
-
-Authorized JavaScript origins: http://localhost:3000
-
-If VITE_GOOGLE_CLIENT_ID is empty, the Google button will be disabled.
-
-3) Start the backend (Express)
-
-In a terminal:
-
-cd server
+```bash
 npm install
-npm start
+```
 
+2) Start backend (terminal 1)
 
-Backend:
+```bash
+npm run dev:server
+```
 
-http://localhost:5000
+3) Start frontend (terminal 2)
 
-Test:
-
-http://localhost:5000/api/health
-
-http://localhost:5000/api/calendar
-
-4) Start the frontend (React/Vite)
-
-In a second terminal (project root):
-
-npm install
+```bash
 npm run dev
+```
 
+4) Build frontend
 
-Open:
+```bash
+npm run build
+```
 
-http://localhost:3000
+5) Health check backend
+- `GET http://localhost:5000/api/health`
+- If `DATABASE_URL` is missing/placeholder, backend starts in `memory` mode for local dev.
 
-Make a user Premium (to unlock SymbolDetailView)
-Option A: phpMyAdmin
+Security baseline:
 
-Open phpMyAdmin (http://localhost:8081
-)
+- Helmet headers
+- CORS allowlist from env
+- Trusted origin enforcement on state-changing routes
+- CSRF protection (double-submit cookie + `X-CSRF-Token` header)
+- Auth + AI rate limits
+- Input sanitization on AI/user payloads
+- Internal error details are not returned to clients
+- AI key remains backend-only
 
-Database: tv_app
+Operational notes:
 
-Table: users
-
-Edit your user row → set plan to premium
-
-Option B: SQL
-USE tv_app;
-UPDATE users SET plan='premium' WHERE email='YOUR_EMAIL_HERE';
-
-What happens in the UI (SymbolDetailView privacy)
-
-You click a symbol in Markets.
-
-If you are not logged in:
-
-Login modal opens (Google or Email)
-
-After successful login → you are redirected to Home
-
-If you are logged in but Free:
-
-You are redirected to Home
-
-You see a message: Premium required
-
-If you are logged in and Premium:
-
-SymbolDetailView opens normally
-
-When you press Logout:
-
-Session is cleared
-
-You go to Home
-
-Notes
-
-Put your Gemini key in .env.local (GEMINI_API_KEY=...) if you use the Gemini feature.
-
-If you already created a MySQL volume before, and schema changed, reset it with:
-
-docker compose down -v
-docker compose up -d
+- `vercel.json` routes `/api/*` to `server/src/index.js`
+- Keep secrets only in env files, never in frontend source
+- Use `updated_site/SECURITY_REVIEW.md` for current hardening status and next steps

@@ -2,19 +2,22 @@
 
 ## Supported Versions
 
-Currently, we only support security updates for the latest version of **NeonCharts**.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| v1.1.x  | :white_check_mark: |
-| < v1.1  | :x:                |
+Only the latest `main` version is supported for security fixes.
 
 ## Reporting a Vulnerability
 
-We take the security of our trading platform seriously. If you discover a security vulnerability, please do NOT open a public issue. Instead, please follow the steps below:
+Please do not open public issues for security vulnerabilities.
 
-1. **Email us**: Send a detailed report to the security team (Omar Jebbari: [omar.jebbari.contact@email.com](mailto:omar.jebbari.contact@email.com)).
-2. **Details**: Include a description of the vulnerability, steps to reproduce, and possible impact.
-3. **Response**: We will acknowledge your report within 48 hours and provide a timeline for a fix.
+Send a private report with reproduction steps and impact to:
+- omar.jebbari.contact@email.com
 
-Thank you for helping keep the NeonCharts community safe!
+Include:
+- affected endpoint/file
+- steps to reproduce
+- expected vs actual behavior
+- severity/impact assessment
+
+Initial response target: within 48 hours.
+
+Technical hardening status is documented in:
+- `updated_site/SECURITY_REVIEW.md`

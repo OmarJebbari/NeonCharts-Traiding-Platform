@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { withCsrfHeaders } from '../services/csrf';
 
 export type Plan = 'free' | 'premium';
 
@@ -24,13 +25,18 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function apiJson(path: string, options: RequestInit = {}) {
+  const method = String(options.method || 'GET').toUpperCase();
+  const withCsrf =
+    method === 'GET' || method === 'HEAD' ? options : await withCsrfHeaders(options);
+  const headers = new Headers(withCsrf.headers || {});
+  if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   const res = await fetch(path, {
+    ...withCsrf,
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
-    ...options,
+    headers,
   });
 
   const isJson = res.headers.get('content-type')?.includes('application/json');
