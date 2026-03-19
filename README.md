@@ -43,7 +43,6 @@
 - [🏛️ System Architecture](#-system-architecture)
 - [⚛️ Technology Stack](#-technology-stack)
 - [✨ Feature Matrix](#-feature-matrix)
-- [🔐 Security Architecture](#-security-architecture)
 - [🗄️ Database Schema](#-database-schema)
 - [📁 Repository Structure](#-repository-structure)
 - [🚀 Deployment](#-deployment)
@@ -86,17 +85,17 @@ graph TD
     M --> API
 
     subgraph FRONTEND ["⚛️ Frontend Layer"]
-        SPA["React 18 + Vite 5\nTypeScript · Tailwind CSS\nGlassmorphism UI Engine"]
+        SPA["React 18 + Vite 5 · TypeScript · Tailwind CSS"]
     end
 
     subgraph BACKEND ["🛡️ Serverless API Layer"]
-        API["Express.js / Node.js 20\nOAuth 2.0 · JWT · RBAC Guards"]
-        GOOGLE["Google Identity\nOAuth 2.0"]
-        GEMINI["Gemini AI\nSentiment Engine"]
+        API["Express.js · Node.js 20 · OAuth 2.0 · JWT · RBAC"]
+        GOOGLE["Google Identity OAuth 2.0"]
+        GEMINI["Gemini AI Sentiment Engine"]
     end
 
     subgraph DB ["🗄️ Persistence Layer"]
-        NEON[("Neon Serverless\nPostgreSQL 15+\nACID · PITR · Autoscale")]
+        NEON[("Neon Serverless PostgreSQL 15+")]
     end
 
     SPA <-->|"REST / JSON"| API
@@ -175,31 +174,6 @@ graph TD
 | AI sentiment engine | Gemini-powered contextual analysis of market conditions |
 | Advanced charting | Extended timeframes, custom indicators, multi-symbol overlays |
 | Export pipeline | Structured data export for quantitative backtesting workflows |
-
----
-
-## 🔐 Security Architecture
-
-
-
-**Authentication flow:**
-
-```
-1. User → Google OAuth consent screen
-2. Google → returns authorization code to backend callback
-3. Backend → exchanges code for Google ID token
-4. Backend → issues signed JWT { sub, email, role, exp }
-5. JWT → set as HttpOnly + SameSite=Strict cookie (JS-inaccessible)
-6. API calls → validated by JWT middleware on every request
-7. Premium routes → additionally assert role === "premium"
-```
-
-> **Recommended hardening:**
-> - `npm install helmet` → `app.use(helmet())` — 12 security headers instantly
-> - `npm install express-rate-limit` → apply to `/api/auth/*` routes
-> - Enable **Dependabot** in GitHub Settings → Code security
-> - Add `SECURITY.md` with responsible disclosure policy
-> - Add `Content-Security-Policy` in `vercel.json`
 
 ---
 
@@ -342,8 +316,6 @@ Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for the full t
 ---
 
 <div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,2,5,30&height=120&section=footer&animation=twinkling" width="100%"/>
 
 **Built with precision for the modern trading era.**
 
