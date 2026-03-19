@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
 
 dotenv.config();
 
@@ -22,6 +24,15 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
+
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // Limit each IP to 20 requests per `window` (here, per 15 minutes)
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Vercel Serverless Functions strip the `/api` prefix when routed.
 // We restore it here so our `app.get('/api/...')` routes match perfectly.
@@ -146,7 +157,7 @@ app.get('/api/health', async (_req, res) => {
 // --------------------
 // Auth (Email/Password)
 // --------------------
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', authRateLimit, async (req, res) => {
   try {
     const { email, username, password, fullName } = req.body || {};
 
@@ -189,7 +200,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authRateLimit, async (req, res) => {
   try {
     const { emailOrUsername, password } = req.body || {};
 
