@@ -28,9 +28,9 @@
 > **NeonCharts** is a production-grade financial analytics ecosystem engineered for real-time market intelligence, economic event orchestration, and AI-augmented trading insight. Built on a glassmorphism UI engine with a globally edge-distributed serverless backend.
 
 ```
-                 ╔══════════════════════════════════════════════════════════════════════╗
-                 ║    REAL-TIME · SERVERLESS · AI-AUGMENTED · RBAC-SECURED · EDGE-FIRST ║
-                 ╚══════════════════════════════════════════════════════════════════════╝
+                   ╔══════════════════════════════════════════════════════════════════════╗
+                   ║    REAL-TIME · SERVERLESS · AI-AUGMENTED · RBAC-SECURED · EDGE-FIRST ║
+                   ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
 </div>
