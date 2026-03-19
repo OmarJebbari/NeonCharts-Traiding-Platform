@@ -1,0 +1,153 @@
+CREATE DATABASE IF NOT EXISTS tv_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE tv_app;
+
+
+
+
+DROP TABLE IF EXISTS calendar_events;
+
+CREATE TABLE calendar_events (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+  event_date DATE NOT NULL,
+  event_time TIME NOT NULL,
+
+  category ENUM('Economic','Earnings','Revenue','Dividends') NOT NULL,
+
+  country VARCHAR(80) NOT NULL,
+  country_code CHAR(2) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  ticker VARCHAR(20) NULL,
+
+  volatility TINYINT NULL,     
+
+  actual VARCHAR(40) NULL,
+  forecast VARCHAR(40) NULL,
+  prior VARCHAR(40) NULL,
+  surprise VARCHAR(40) NULL,
+
+  market_cap VARCHAR(40) NULL,
+  period ENUM('pre','post') NULL,
+  logo VARCHAR(20) NULL,
+
+  dividend_amount VARCHAR(40) NULL,
+  ex_dividend_date VARCHAR(40) NULL,
+  payment_date VARCHAR(40) NULL,
+  dividend_yield VARCHAR(40) NULL,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  INDEX idx_date_cat (event_date, category),
+  INDEX idx_country (country),
+  INDEX idx_title (title)
+) ENGINE=InnoDB;
+
+
+
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+  email VARCHAR(255) NOT NULL,
+  username VARCHAR(50) NULL,
+
+  password_hash VARCHAR(255) NULL,
+  google_sub VARCHAR(255) NULL,
+
+  full_name VARCHAR(255) NULL,
+  avatar_url TEXT NULL,
+
+  plan ENUM('free','premium') NOT NULL DEFAULT 'free',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  UNIQUE KEY uq_users_email (email),
+  UNIQUE KEY uq_users_username (username),
+  UNIQUE KEY uq_users_google_sub (google_sub)
+) ENGINE=InnoDB;
+
+
+
+
+
+
+USE tv_app;
+
+START TRANSACTION;
+
+INSERT INTO calendar_events (event_date, event_time, category, country, country_code, title, ticker, volatility, actual, forecast, prior, surprise, market_cap, period, logo, dividend_amount, ex_dividend_date, payment_date, dividend_yield)
+VALUES
+('2025-12-08', '08:00:00', 'Economic', 'Germany', 'DE', 'Industrial Production MoM', NULL, 2, '-0.4%', '-0.2%', '-1.3%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-08', '07:00:00', 'Earnings', 'Germany', 'DE', 'Stabilus SE', '0QUL', 1, '-0.54 USD', '12.45 USD', NULL, '+5.23%', '587.50 M USD', 'pre', 'S', NULL, NULL, NULL, NULL),
+('2025-12-08', '16:05:00', 'Revenue', 'USA', 'US', 'Casey''s General Stores', 'CASY', 2, '3.33 B USD', '3.29 B USD', NULL, '+1.21%', '14.2 B USD', 'post', 'C', NULL, NULL, NULL, NULL),
+('2025-12-09', '04:35:00', 'Economic', 'Japan', 'JP', '5-Year JGB Auction', NULL, 1, '1.435%', '0.95%', '1.245%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-09', '04:35:00', 'Economic', 'Japan', 'JP', '6-Month Bill Auction', NULL, 1, '0.6942%', '0.65%', '0.5893%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-09', '19:00:00', 'Economic', 'USA', 'US', '10-Year Note Auction', NULL, 1, '4.175%', '0.99%', '4.074%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-09', '00:51:00', 'Earnings', 'Canada', 'CA', 'Troilus Mining Corp', 'A41VGG', 1, '-0.03 USD', '4.20 USD', NULL, '-2.15%', '681.89 M USD', 'pre', 'T', NULL, NULL, NULL, NULL),
+('2025-12-09', '06:55:00', 'Earnings', 'USA', 'US', 'AutoZone, Inc.', 'AZO', 3, '32.55 USD', '31.60 USD', NULL, '+3.01%', '54.1 B USD', 'pre', 'A', NULL, NULL, NULL, NULL),
+('2025-12-09', '06:55:00', 'Revenue', 'USA', 'US', 'AutoZone, Inc.', 'AZO', 3, '4.19 B USD', '4.18 B USD', NULL, '+0.24%', '54.1 B USD', 'pre', 'A', NULL, NULL, NULL, NULL),
+('2025-12-09', '08:00:00', 'Dividends', 'USA', 'US', 'Best Buy Co., Inc.', 'BBY', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'B', '0.94 USD', 'Dec 9, 2025', 'Jan 2, 2026', '4.32%'),
+('2025-12-10', '11:00:00', 'Economic', 'United Kingdom', 'GB', 'Treasury Gilt 2035 Auction', NULL, 1, '4.613%', '0.88%', '4.608%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-10', '11:10:00', 'Economic', 'Italy', 'IT', '12-Month BOT Auction', NULL, 1, '2.181%', '0.75%', '2.063%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-10', '17:30:00', 'Economic', 'USA', 'US', '17-Week Bill Auction', NULL, 1, '3.61%', '0.92%', '3.62%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-10', '16:05:00', 'Earnings', 'USA', 'US', 'Adobe Inc.', 'ADBE', 3, '4.27 USD', '4.14 USD', NULL, '+3.14%', '235.4 B USD', 'post', 'A', NULL, NULL, NULL, NULL),
+('2025-12-10', '16:05:00', 'Revenue', 'USA', 'US', 'Adobe Inc.', 'ADBE', 3, '5.05 B USD', '5.01 B USD', NULL, '+0.80%', '235.4 B USD', 'post', 'A', NULL, NULL, NULL, NULL),
+('2025-12-15', '03:30:00', 'Economic', 'South Korea', 'KR', '10-Year KTB Auction', NULL, 1, '3.41%', '0.82%', '3.285%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '15:00:00', 'Economic', 'France', 'FR', '12-Month BTF Auction', NULL, 1, '2.146%', '0.45%', '2.148%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '15:00:00', 'Economic', 'France', 'FR', '3-Month BTF Auction', NULL, 1, '2.079%', '0.35%', '2.088%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '15:00:00', 'Economic', 'France', 'FR', '6-Month BTF Auction', NULL, 1, '2.117%', '0.55%', '2.103%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '17:30:00', 'Economic', 'USA', 'US', '3-Month Bill Auction', NULL, 1, '3.56%', '0.85%', '3.65%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '17:30:00', 'Economic', 'USA', 'US', '6-Month Bill Auction', NULL, 1, '3.495%', '0.94%', '3.58%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-15', '05:00:00', 'Earnings', 'Japan', 'JP', 'JAIC Co., Ltd.', '7073', 1, '0.45 USD', '15.50 USD', NULL, '+3.45%', '15.50 M USD', 'post', 'JA', NULL, NULL, NULL, NULL),
+('2025-12-15', '07:00:00', 'Earnings', 'Japan', 'JP', 'Berg Earth Co., Ltd.', '1383', 1, '0.48 USD', '18.25 USD', NULL, '+7.12%', '33.05 M USD', 'post', 'B', NULL, NULL, NULL, NULL),
+('2025-12-15', '05:00:00', 'Revenue', 'Japan', 'JP', 'JAIC Co., Ltd.', '7073', 1, '12.5 M USD', '13.25 USD', NULL, '+4.12%', '15.50 M USD', 'post', 'JA', NULL, NULL, NULL, NULL),
+('2025-12-17', '04:35:00', 'Economic', 'Japan', 'JP', '52-Week Bill Auction', NULL, 1, '0.8627%', '0.62%', '0.7475%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-17', '17:30:00', 'Economic', 'USA', 'US', '17-Week Bill Auction', NULL, 1, '3.54%', '0.91%', '3.61%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-17', '18:00:00', 'Economic', 'Canada', 'CA', '5-Year Bond Auction', NULL, 1, '3.038%', '0.89%', '2.868%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-17', '19:00:00', 'Economic', 'USA', 'US', '20-Year Bond Auction', NULL, 1, '4.798%', '0.98%', '4.706%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-17', '06:50:00', 'Earnings', 'USA', 'US', 'General Mills, Inc.', 'GIS', 2, '1.25 USD', '1.16 USD', NULL, '+7.75%', '37.8 B USD', 'pre', 'G', NULL, NULL, NULL, NULL),
+('2025-12-17', '06:50:00', 'Revenue', 'USA', 'US', 'General Mills, Inc.', 'GIS', 2, '5.14 B USD', '5.10 B USD', NULL, '+0.78%', '37.8 B USD', 'pre', 'G', NULL, NULL, NULL, NULL),
+('2025-12-17', '07:30:00', 'Dividends', 'USA', 'US', 'The Coca-Cola Company', 'KO', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'KO', '0.46 USD', 'Dec 17, 2025', 'Jan 15, 2026', '3.12%'),
+('2025-12-22', '08:30:00', 'Dividends', 'Canada', 'CA', 'Sun Life Crescent Specialty Credit Private Pool Trust Unit', 'SLSC', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'S', '0.08 USD', 'Dec 22, 2025', 'Dec 31, 2025', '6.51%'),
+('2025-12-22', '16:15:00', 'Dividends', 'USA', 'US', 'Fundstrat Granny Shots US Large Cap & Income ETF', 'GRNI', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'G', '0.17 USD', 'Dec 22, 2025', 'Dec 23, 2025', '4.87%'),
+('2025-12-22', '09:00:00', 'Dividends', 'USA', 'US', 'Alliance Global Group, Inc.', 'ALGGY', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'A', '0.05 USD', 'Dec 22, 2025', 'Feb 2, 2026', '0.69%'),
+('2025-12-22', '08:30:00', 'Economic', 'USA', 'US', 'Chicago Fed National Activity Index', NULL, 2, '0.03', '0.00', '-0.49', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-22', '16:00:00', 'Earnings', 'USA', 'US', 'Heico Corp.', 'HEI', 2, '0.82 USD', '0.78 USD', NULL, '+5.12%', '24.1 B USD', 'post', 'H', NULL, NULL, NULL, NULL),
+('2025-12-29', '07:00:00', 'Dividends', 'USA', 'US', 'Eventide International ETF', 'ESIM', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'E', '0.01 USD', 'Dec 29, 2025', 'Dec 30, 2025', '0.11%'),
+('2025-12-29', '16:30:00', 'Dividends', 'USA', 'US', 'VistaShares Target 15 S&P 100 Distribution ETF', 'SIOO', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'S', '0.25 USD', 'Dec 29, 2025', 'Dec 30, 2025', '15.29%'),
+('2025-12-29', '02:30:00', 'Dividends', 'South Korea', 'KR', 'Hana 1Q Hyundai Motor Company Group Bond(A+)KTB/MSB ETF Units', '492500', 1, NULL, NULL, NULL, NULL, NULL, NULL, '1Q', '0.52 USD', 'Dec 29, 2025', 'Jan 2, 2026', '1.48%'),
+('2025-12-29', '10:00:00', 'Economic', 'USA', 'US', 'Pending Home Sales MoM', NULL, 3, '0.0%', '-0.95%', '-1.5%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2025-12-29', '10:30:00', 'Economic', 'USA', 'US', 'Dallas Fed Mfg Business Index', NULL, 1, '-10.5', '-0.85', '-19.9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-05', '04:26:00', 'Earnings', 'India', 'IN', 'Metropolis Healthcare Ltd.', 'METROPOLIS', 2, '0.10 USD', '0.10 USD', NULL, '+4.33%', '1.16 B USD', 'pre', 'M', NULL, NULL, NULL, NULL),
+('2026-01-05', '07:30:00', 'Earnings', 'Japan', 'JP', 'Karula Co., Ltd.', '2789', 1, '0.02 USD', '11.15 USD', NULL, '-4.30%', '18.74 M USD', 'post', 'K', NULL, NULL, NULL, NULL),
+('2026-01-05', '04:26:00', 'Revenue', 'India', 'IN', 'Metropolis Healthcare Ltd.', 'METROPOLIS', 2, '45.19 M USD', '44.18 M USD', NULL, '+2.27%', '1.16 B USD', 'pre', 'M', NULL, NULL, NULL, NULL),
+('2026-01-05', '07:30:00', 'Revenue', 'Japan', 'JP', 'Nextage Co., Ltd.', '3186', 2, '1.12 B USD', '1.07 B USD', NULL, '+5.31%', '1.58 B USD', 'post', 'N', NULL, NULL, NULL, NULL),
+('2026-01-05', '16:05:00', 'Dividends', 'USA', 'US', 'Westwood Salient Enhanced Midstream Income ETF', 'MDST', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'W', '0.22 USD', 'Jan 5, 2026', 'Jan 9, 2026', '10.29%'),
+('2026-01-05', '17:00:00', 'Dividends', 'USA', 'US', 'Werner Enterprises, Inc.', 'WERN', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'W', '0.14 USD', 'Jan 5, 2026', 'Jan 21, 2026', '1.74%'),
+('2026-01-05', '03:30:00', 'Economic', 'South Korea', 'KR', '2-Year KTB Auction', NULL, 1, '2.876%', '0.85%', '2.66%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-05', '11:30:00', 'Economic', 'Germany', 'DE', '3-Month Bubill Auction', NULL, 1, '4.5%', '0.95%', '1.9171%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-06', '03:30:00', 'Economic', 'South Korea', 'KR', '30-Year KTB Auction', NULL, 1, '3.225%', '0.72%', '3.06%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-06', '04:35:00', 'Economic', 'Japan', 'JP', '10-Year JGB Auction', NULL, 1, '1.872%', '0.68%', '1.658%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-06', '12:00:00', 'Earnings', 'USA', 'US', 'AngioDynamics, Inc.', 'ANGO', 2, '0.00 USD', '-0.10 USD', NULL, '+100.00%', '471.33 M USD', 'pre', 'A', NULL, NULL, NULL, NULL),
+('2026-01-06', '22:05:00', 'Earnings', 'USA', 'US', 'AAR CORP.', 'AIR', 2, '1.18 USD', '1.03 USD', NULL, '+14.19%', '3.54 B USD', 'post', 'A', NULL, NULL, NULL, NULL),
+('2026-01-06', '07:00:00', 'Revenue', 'Japan', 'JP', 'Hiday Hidaka Corp.', '7611', 1, '98.73 M USD', '95.06 M USD', NULL, '+3.87%', '811.87 M USD', 'post', 'H', NULL, NULL, NULL, NULL),
+('2026-01-06', '07:30:00', 'Revenue', 'Japan', 'JP', 'Takashimaya Company, Limited', '8233', 2, '758.49 M USD', '770.07 M USD', NULL, '-1.50%', '3.30 B USD', 'post', 'T', NULL, NULL, NULL, NULL),
+('2026-01-06', '06:45:00', 'Dividends', 'Canada', 'CA', 'National Bank of Canada Non-Cum Conv Red Perp Pfd', 'NA.PR.G', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'NBC', '0.32 USD', 'Jan 6, 2026', 'Feb 15, 2026', '2.84%'),
+('2026-01-06', '16:10:00', 'Dividends', 'USA', 'US', 'Agilent Technologies, Inc.', 'A', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'A', '0.25 USD', 'Jan 6, 2026', 'Jan 28, 2026', '0.71%'),
+('2026-01-07', '07:30:00', 'Earnings', 'Japan', 'JP', 'ABC-MART, INC.', '2670', 2, '0.24 USD', '0.27 USD', NULL, '-10.31%', '4.18 B USD', 'post', 'ABC', NULL, NULL, NULL, NULL),
+('2026-01-07', '12:00:00', 'Earnings', 'USA', 'US', 'Cal-Maine Foods, Inc.', 'CALM', 2, '2.13 USD', '1.95 USD', NULL, '+9.12%', '3.84 B USD', 'pre', 'CM', NULL, NULL, NULL, NULL),
+('2026-01-07', '07:00:00', 'Revenue', 'Japan', 'JP', 'SAN-A CO., LTD.', '2659', 1, '385.75 M USD', '376.85 M USD', NULL, '+2.36%', '1.18 B USD', 'post', 'S', NULL, NULL, NULL, NULL),
+('2026-01-07', '07:30:00', 'Revenue', 'Japan', 'JP', 'ABC-MART, INC.', '2670', 2, '570.85 M USD', '583.29 M USD', NULL, '-2.13%', '4.18 B USD', 'post', 'A', NULL, NULL, NULL, NULL),
+('2026-01-07', '16:05:00', 'Dividends', 'USA', 'US', 'Cisco Systems, Inc.', 'CSCO', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'C', '0.40 USD', 'Jan 7, 2026', 'Jan 28, 2026', '2.85%'),
+('2026-01-07', '07:00:00', 'Economic', 'USA', 'US', 'MBA Mortgage Applications', NULL, 2, '4.2%', '0.5%', '-2.1%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-07', '10:30:00', 'Economic', 'USA', 'US', 'EIA Crude Oil Inventories', NULL, 3, '-2.5M', '-0.45M', '1.2M', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('2026-01-12', '03:15:00', 'Dividends', 'Indonesia', 'ID', 'PT ALAMTRI RES INDONESIA TBK', 'ADOOY', 2, NULL, NULL, NULL, NULL, NULL, NULL, 'A', '0.27 USD', 'Jan 12, 2026', 'Jan 30, 2026', '71.15%'),
+('2026-01-12', '09:30:00', 'Dividends', 'USA', 'US', 'Allspring Multi-Sector Income Fund', 'ERC', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'AS', '0.07 USD', 'Jan 12, 2026', 'Feb 2, 2026', '9.26%'),
+('2026-01-12', '10:00:00', 'Dividends', 'Brazil', 'BR', 'Sendas Distribuidora S.A.', 'ASAIY', 1, NULL, NULL, NULL, NULL, NULL, NULL, 'S', '0.06 USD', 'Jan 12, 2026', 'Jul 6, 2026', '0.84%'),
+('2026-01-12', '16:15:00', 'Earnings', 'USA', 'US', 'KB Home', 'KBH', 2, '1.85 USD', '1.70 USD', NULL, '+8.82%', '5.2 B USD', 'post', 'K', NULL, NULL, NULL, NULL),
+('2026-01-12', '11:00:00', 'Economic', 'USA', 'US', 'Consumer Inflation Expectations', NULL, 2, '3.0%', '0.98%', '3.4%', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+COMMIT;

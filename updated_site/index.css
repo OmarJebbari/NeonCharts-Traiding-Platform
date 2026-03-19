@@ -1,0 +1,9 @@
+/* Minimal base styles. Tailwind is loaded via CDN in index.html. */
+html, body, #root {
+  height: 100%;
+}
+
+/* Prevent default margin */
+body {
+  margin: 0;
+}
