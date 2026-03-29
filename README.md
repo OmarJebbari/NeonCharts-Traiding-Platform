@@ -326,7 +326,7 @@ See [`LICENSE`](./LICENSE) for the full text.
 
 **Built with precision for the modern trading era.**
 
-*Omar Jebbari · Oussama Touate · Zakaria Ammar · Salma Bel Haj*
+*Omar Jebbari · Oussama Touate · Zakaria Ammar · Salma Belhaj*
 
 <br/>
 
