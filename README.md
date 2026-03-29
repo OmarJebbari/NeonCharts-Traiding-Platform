@@ -309,7 +309,7 @@ GEMINI_API_KEY=your_gemini_api_key
 | **Omar Jebbari** | System design · API architecture · Core infrastructure · Full-stack ownership |
 | **Oussama Touate** | Serverless functions · PostgreSQL schema · Query optimization · Data modeling |
 | **Zakaria Ammar** | React architecture · Glassmorphism design system · Performance · Components |
-| **Salma Bel Haj** | Auth protocols · RBAC design · Test coverage · Security hardening |
+| **Salma Belhaj** | Auth protocols · RBAC design · Test coverage · Security hardening |
 
 </div>
 
